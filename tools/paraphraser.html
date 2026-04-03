@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paraphraser - AI Tools Hub</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="logo">AI Tools Hub</div>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../privacy.html">Privacy</a>
+        <a href="../terms.html">Terms</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Paraphraser</h1>
+    <p>Rewrite your text quickly and accurately with AI.</p>
+</section>
+
+<section class="tools-grid">
+    <textarea id="paraphraserInput" placeholder="Enter your text here..." rows="8"></textarea>
+    <button onclick="generateTool('paraphraserInput','paraphraserOutput','paraphrase')">Paraphrase</button>
+    <textarea id="paraphraserOutput" placeholder="AI-generated paraphrased text will appear here..." rows="8" readonly></textarea>
+    <div class="tool-actions">
+        <button onclick="copyOutput('paraphraserOutput')">Copy</button>
+        <button onclick="downloadPDF('paraphraserOutput','Paraphrased')">Download PDF</button>
+    </div>
+</section>
+
+<script src="/docx/index.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../js/tools.js"></script>
+
+</body>
+</html>

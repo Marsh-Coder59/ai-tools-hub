@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Generator - AI Tools Hub</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" href="/favicon.ico">
+</head>
+<body>
+
+<nav>
+    <div class="logo">AI Tools Hub</div>
+    <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../privacy.html">Privacy</a>
+        <a href="../terms.html">Terms</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Resume Generator</h1>
+    <p>Create professional resumes instantly with AI.</p>
+</section>
+
+<section class="tools-grid">
+    <textarea id="resumeInput" placeholder="Enter your experience, education, skills, contact details..." rows="8"></textarea>
+    <button onclick="generateTool('resumeInput','resumeOutput','resume')">Generate Resume</button>
+    <textarea id="resumeOutput" placeholder="Your AI-generated resume will appear here..." rows="12" readonly></textarea>
+    <div class="tool-actions">
+        <button onclick="copyOutput('resumeOutput')">Copy</button>
+        <button onclick="downloadPDF('resumeOutput','Resume')">Download PDF</button>
+    </div>
+</section>
+
+<script src="/docx/index.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../js/tools.js"></script>
+
+</body>
+</html>

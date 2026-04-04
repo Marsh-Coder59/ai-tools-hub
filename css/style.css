@@ -35,9 +35,18 @@ nav a:hover {
     color: #00aaff;
 }
 
-nav .logo {
-    font-size: 1.8rem;
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
     font-weight: bold;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
 /* Hero Section */
@@ -218,6 +227,13 @@ p {
 .tools-grid button {
     padding: 10px 15px;
     cursor: pointer;
+}
+
+#logo {
+    width: 150px;   /* adjust size */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* center if needed */
 }
 /* Responsive Navbar Toggle */
 .nav-toggle {

@@ -131,6 +131,16 @@ ${input}
 });
 
 // Email API
+// Email transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Email API
 app.post('/send-email', async (req, res) => {
 
     const { name, email, subject, message } = req.body;
@@ -142,14 +152,6 @@ app.post('/send-email', async (req, res) => {
     }
 
     try {
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -173,7 +175,7 @@ ${message}
 
     } catch (error) {
 
-        console.error("Email Error:", error.message);
+        console.error("Email Error:", error);
 
         res.status(500).json({
             error: "Email failed to send"

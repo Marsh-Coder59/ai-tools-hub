@@ -130,13 +130,27 @@ ${input}
     }
 });
 
-// Email API
+// ================= EMAIL API =================
+
+const nodemailer = require("nodemailer");
+
 // Email transporter
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    }
+});
+
+// Verify SMTP connection on server start
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log("SMTP Error:", error);
+    } else {
+        console.log("SMTP Server is ready to send emails");
     }
 });
 
@@ -155,19 +169,24 @@ app.post('/send-email', async (req, res) => {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            replyTo: email,
             to: process.env.EMAIL_USER,
+            replyTo: email,
             subject: subject,
             text: `
+New Contact Message
+
 Name: ${name}
 Email: ${email}
+Subject: ${subject}
 
 Message:
 ${message}
 `
         };
 
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
+
+        console.log("Email sent:", info.response);
 
         res.json({
             success: "Email sent successfully"
@@ -175,10 +194,11 @@ ${message}
 
     } catch (error) {
 
-        console.error("Email Error:", error);
+        console.log("Full Email Error:", error);
 
         res.status(500).json({
-            error: "Email failed to send"
+            error: "Email failed to send",
+            details: error.message
         });
     }
 });

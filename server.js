@@ -132,7 +132,6 @@ ${input}
 
 // ================= EMAIL API =================
 
-const nodemailer = require("nodemailer");
 
 // Email transporter
 const transporter = nodemailer.createTransport({

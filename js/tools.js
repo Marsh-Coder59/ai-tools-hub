@@ -139,15 +139,7 @@ function downloadDoc(id, filename) {
         });
 }
 
-function handleDownload(outputId, fileName) {
-    window.open("YOUR_MONETIZED_LINK", "_blank");
 
-    alert("Preparing your download...");
-
-    setTimeout(() => {
-        downloadPDF(outputId, fileName);
-    }, 1500);
-}
 
 // ===============================
 // Navbar Toggle (Optional)

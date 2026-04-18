@@ -3,17 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Fix grammar errors instantly with AI grammar checker tool.">
+<meta name="keywords" content="grammar checker, AI grammar fix, sentence correction">
+<meta name="author" content="AI Tools Hub">
+
 <title>Grammar Fixer - AI Tools Hub</title>
+
 <link rel="icon" type="image/png" href="../images/favicon.png">
 <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
 
 <nav>
     <div class="logo">
-    <img src="../images/favicon.png" alt="AI Tools Hub Logo">
-    <span>AI Tools Hub</span>
-</div>
+        <img src="../images/favicon.png" alt="AI Tools Hub Logo">
+        <span>AI Tools Hub</span>
+    </div>
+
+    <nav>
+    <div class="logo">
+        <img src="../images/favicon.png" alt="AI Tools Hub Logo">
+        <span>AI Tools Hub</span>
+    </div>
+
     <div class="nav-links">
         <a href="../index.html">Home</a>
         <a href="../about.html">About</a>
@@ -23,24 +37,92 @@
         <a href="../terms.html">Terms</a>
     </div>
 </nav>
+</nav>
 
 <section class="hero">
     <h1>Grammar Fixer</h1>
-    <p>Check and correct grammar instantly with AI.</p>
+    <p>Correct grammar instantly with AI.</p>
+</section>
+
+<section class="info-section">
+    <h2>How to Use</h2>
+    <p>Paste text and fix grammar in one click.</p>
+    <ul>
+        <li>Step 1: Paste your text</li>
+        <li>Step 2: Click Fix Grammar</li>
+        <li>Step 3: Copy corrected text</li>
+    </ul>
 </section>
 
 <section class="tools-grid">
-    <textarea id="grammarInput" placeholder="Enter your text here..." rows="8"></textarea>
-    <button onclick="generateTool('grammarInput','grammarOutput','grammar')">Fix Grammar</button>
-    <textarea id="grammarOutput" placeholder="AI-corrected text will appear here..." rows="8" readonly></textarea>
+    <textarea id="grammarInput" placeholder="Enter your text to fix grammar..." rows="8"></textarea>
+
+    <button onclick="generateTool('grammarInput','grammarOutput','grammar')">
+        Fix Grammar
+    </button>
+
+<textarea id="grammarOutput" placeholder="Corrected text will appear here..." rows="12" readonly></textarea>
     <div class="tool-actions">
+
+        <a href="YOUR_AFFILIATE_LINK" target="_blank" class="btn-affiliate affiliate-grammarly">
+            <img src="https://cdn.simpleicons.org/grammarly/ffffff" alt="Grammarly">
+            Improve with Grammarly
+        </a>
+
+        <a href="YOUR_SECOND_AFFILIATE_LINK" target="_blank" class="btn-affiliate affiliate-ai">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" alt="AI Tools">
+            Write Better with AI Tools
+        </a>
         <button onclick="copyOutput('grammarOutput')">Copy</button>
-        <button onclick="downloadPDF('grammarOutput','GrammarFixed')">Download PDF</button>
+<button onclick="handleDownload('grammarOutput','GrammarFixed')">
+    Download PDF (Instant & Free)
+</button>
+
     </div>
 </section>
 
-<script src="/docx/index.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<div class="donation-box">
+
+    <h3>💖 Support This Tool</h3>
+    <p>If this AI tool helped you, consider supporting its development.</p>
+
+    <!-- PayPal -->
+    <a href="https://paypal.me/YOUR_USERNAME" target="_blank" class="donate-btn paypal">
+        <img src="https://cdn.simpleicons.org/paypal/ffffff" alt="PayPal">
+        Donate via PayPal
+    </a>
+
+    <!-- M-Pesa -->
+<div class="mpesa-badge">
+    <span class="mpesa-icon">📱</span>
+    <div>
+        <p><strong>M-Pesa Support</strong></p>
+        <p>Number: 0748941669</p>
+        <p>AI Tools Hub</p>
+    </div>
+    <div class="telegram-box" id="telegramCTA">
+    <p>🚀 Get more AI tools & updates</p>
+    <a href="https://t.me/YOURCHANNEL" target="_blank">
+        Join Telegram
+    </a>
+</div>
+</div>
+
+</div>
+
+<footer>
+    <p>© 2026 AI Tools Hub. All rights reserved.</p>
+    <p>
+        <a href="index.html">Home</a> |
+        <a href="about.html">About</a> |
+        <a href="blog.html">Blog</a> |
+        <a href="contact.html">Contact</a> |
+        <a href="privacy.html">Privacy</a> |
+        <a href="terms.html">Terms</a>
+    </p>
+</footer>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="../js/tools.js"></script>
 

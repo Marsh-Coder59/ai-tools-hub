@@ -218,6 +218,7 @@ p {
     font-size: 16px;
 }
 
+
 .tool-actions {
     display: flex;
     gap: 10px;
@@ -250,6 +251,158 @@ p {
     border-radius: 3px;
 }
 
+.btn-affiliate {
+    display: flex;    
+    gap: 10px;
+    padding: 12px 14px;
+    margin: 8px 0px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s ease;
+    width: 220px;
+}
+
+.btn-affiliate img {
+    width: 18px;
+    height: 30px;
+}
+.page-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+/* LEFT AFFILIATE PANEL */
+.affiliate-panel {
+    width: 250px;
+    position: sticky;
+    top: 20px;
+}
+
+.affiliate-panel h3 {
+    margin-bottom: 15px;
+}
+
+/* RIGHT TOOL AREA */
+.tools-area {
+    flex: 1;
+}
+
+/* BUTTON STYLING */
+.btn-affiliate {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-affiliate img {
+    width: 18px;
+    height: 18px;
+}
+
+/* COLORS */
+.affiliate-grammarly {
+    background: #11a683;
+}
+
+.affiliate-ai {
+    background: #4f46e5;
+}
+
+
+/* Grammarly */
+.affiliate-grammarly {
+    background: #11a683;
+}
+
+/* AI tools */
+.affiliate-ai {
+    background: #4f46e5;
+}
+
+.btn-affiliate:hover {
+    transform: scale(1.05);
+}
+
+.telegram-box {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.donation-box {
+    margin-top: 40px;
+    padding: 25px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #ffffff, #f3f3f3);
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.donation-box h3 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.donation-box p {
+    color: #555;
+    font-size: 14px;
+}
+
+.donate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    margin: 15px auto;
+    width: 220px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.donate-btn:hover {
+    transform: scale(1.05);
+}
+
+.donate-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+/* PayPal */
+.paypal {
+    background: #0070ba;
+}
+
+/* M-Pesa */
+.mpesa-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #eafaf0;
+}
+
+.mpesa-box img {
+    width: 28px;
+    height: 28px;
+}
+
 @media (max-width: 768px) {
     nav .nav-links {
         display: none;
@@ -264,5 +417,16 @@ p {
 
     .nav-toggle {
         display: flex;
+    }
+}
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .page-layout {
+        flex-direction: column;
+    }
+
+    .affiliate-panel {
+        width: 100%;
+        position: static;
     }
 }

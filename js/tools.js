@@ -64,26 +64,29 @@ function copyOutput(id) {
 // Download PDF
 // ===============================
 function downloadPDF(id, filename) {
-    const content = document.getElementById(id).value;
 
-    if (!content) {
+    const content = document.getElementById(id)?.value;
+
+    if (!content || content.trim() === "") {
         alert("Nothing to download!");
         return;
     }
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("PDF library not loaded. Refresh page.");
+        return;
+    }
 
-    doc.setFont("Times", "Normal");
+    const doc = new window.jspdf.jsPDF();
+
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
 
     const lines = doc.splitTextToSize(content, 180);
-    doc.text(lines, 10, 15);
+    doc.text(lines, 10, 10);
 
     doc.save(filename + ".pdf");
-
 }
-
 
 // ===============================
 // Download DOCX - Fully Fixed

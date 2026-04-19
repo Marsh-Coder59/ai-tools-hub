@@ -4,57 +4,69 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
+
 const nodemailer = require('nodemailer');
 
 const app = express();
 
-// Middleware
+// ===============================
+// MIDDLEWARE
+// ===============================
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
-// Homepage route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Initialize Gemini AI
+// ===============================
+// AI CLIENTS
+// ===============================
+
+// Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({
+const geminiModel = genAI.getGenerativeModel({
     model: "gemini-2.5-flash"
 });
 
-// AI API
-app.post('/api/generate', async (req, res) => {
-    try {
-        const { input, type } = req.body;
+// OpenAI
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
-        if (!input) {
-            return res.status(400).json({ error: "Input is required" });
-        }
+// Claude
+const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY
+});
 
-        let prompt = "";
+// ===============================
+// PROMPT BUILDER
+// ===============================
+function buildPrompt(type, input) {
 
-        switch (type) {
+    switch (type) {
 
-           case "resume":
-prompt = `
+        // ===============================
+        // RESUME GENERATOR
+        // ===============================
+        case "resume":
+            return `
 Create a professional resume in clean plain text format.
 
 STRICT RULES:
+- Output ONLY the resume
+- No explanations
 - No markdown
-- No bold text
-- No stars **
-- No symbols
-- No formatting characters
-- No backticks
-- No bullet stars
-- Plain text only
-- Clean professional layout
-- Output only the resume
+- No symbols (*, **, #, etc.)
+- No placeholders like [Your Name]
+- Use proper spacing between sections
 
-Sections:
+FORMAT:
 Name
 Contact
 Summary
@@ -65,75 +77,256 @@ Education
 User Data:
 ${input}
 `;
-break;
 
-            case "paraphrase":
-                prompt = `
-Rewrite clearly and professionally.
+        // ===============================
+        // PARAPHRASER
+        // ===============================
+        case "paraphrase":
+            return `
+Rewrite the following text clearly and professionally.
 
-Return only rewritten text.
-
-Text:
-${input}
-`;
-                break;
-
-            case "grammar":
-                prompt = `
-Fix grammar.
-
-Return only corrected text.
+STRICT RULES:
+- Output ONLY the rewritten text
+- No explanations
+- No multiple options
+- No bullet points
+- Keep same meaning
 
 Text:
 ${input}
 `;
-                break;
 
-            case "bio":
-                prompt = `
-Write 3 short professional bio options.
+        // ===============================
+        // GRAMMAR FIXER
+        // ===============================
+        case "grammar":
+            return `
+Fix all grammar and spelling errors in the text.
 
-1-2 sentences each.
-No headings.
-No explanation.
+STRICT RULES:
+- Output ONLY the corrected text
+- Do NOT explain anything
+- Do NOT add extra sentences
+
+Text:
+${input}
+`;
+
+        // ===============================
+        // BIO GENERATOR
+        // ===============================
+        case "bio":
+            return `
+Write exactly 3 short professional bio options.
+
+STRICT RULES:
+- Each bio must be 1–2 sentences
+- Output ONLY the bios
+- No headings
+- No numbering
+- No explanations
 
 User Data:
 ${input}
 `;
-                break;
 
-            case "email":
-                prompt = `
-Write a professional email.
+        // ===============================
+        // EMAIL GENERATOR
+        // ===============================
+        case "email":
+            return `
+Write a professional email based on the user input.
 
-Return only email.
+STRICT RULES:
+- Output ONLY the email
+- No tips or explanations
+- No bullet points
+- No placeholders like [Your Name]
+- Use real professional tone
+
+STRUCTURE:
+Subject line
+Greeting
+Body
+Closing
 
 User Data:
 ${input}
 `;
-                break;
 
-            default:
-                prompt = input;
+        default:
+            return input;
+    }
+}
+
+// ===============================
+// AI ENGINE WITH TRACKING
+// ===============================
+async function tryAI(prompt) {
+
+    // GEMINI
+    try {
+        const res = await geminiModel.generateContent(prompt);
+        return {
+            output: res.response.text(),
+            provider: "gemini",
+            model: "gemini-2.5-flash"
+        };
+    } catch (e) {
+        console.log("Gemini failed");
+    }
+
+    // OPENAI
+    try {
+        const res = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.7
+        });
+
+        return {
+            output: res.choices[0].message.content,
+            provider: "openai",
+            model: "gpt-4o-mini"
+        };
+
+    } catch (e) {
+        console.log("OpenAI failed");
+    }
+
+    // CLAUDE
+    try {
+        const res = await anthropic.messages.create({
+            model: "claude-3-haiku-20240307",
+            max_tokens: 800,
+            messages: [{ role: "user", content: prompt }]
+        });
+
+        return {
+            output: res.content[0].text,
+            provider: "claude",
+            model: "claude-3-haiku-20240307"
+        };
+
+    } catch (e) {
+        console.log("Claude failed");
+    }
+
+    // OPENROUTER
+    try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "meta-llama/llama-3-8b-instruct",
+                messages: [{ role: "user", content: prompt }]
+            })
+        });
+
+        const data = await response.json();
+
+        return {
+            output: data?.choices?.[0]?.message?.content || null,
+            provider: "openrouter",
+            model: "llama-3-8b"
+        };
+
+    } catch (e) {
+        console.log("OpenRouter failed");
+    }
+
+    return null;
+}
+
+// ===============================
+// RULE ENGINE (NO AI FALLBACK)
+// ===============================
+function ruleEngine(type, input) {
+
+    if (type === "resume") {
+        return {
+            output: `
+NAME: Not provided
+
+SUMMARY:
+Basic profile generated without AI.
+
+EDUCATION:
+${input}
+
+SKILLS:
+Basic skills listed manually.
+
+NOTE:
+Generated using fallback system.`,
+            provider: "rule-engine",
+            model: "none"
+        };
+    }
+
+    if (type === "email") {
+        return {
+            output: `Subject: Message
+
+Dear Sir/Madam,
+
+${input}
+
+Regards,
+User`,
+            provider: "rule-engine",
+            model: "none"
+        };
+    }
+
+    return {
+        output: input,
+        provider: "rule-engine",
+        model: "none"
+    };
+}
+
+// ===============================
+// MAIN API
+// ===============================
+app.post('/api/generate', async (req, res) => {
+
+    try {
+
+        const { input, type } = req.body;
+
+        if (!input) {
+            return res.status(400).json({ error: "Input is required" });
         }
 
-        const result = await model.generateContent(prompt);
-        const output = result.response.text();
+        const prompt = buildPrompt(type, input);
 
-        res.json({ output });
+        let result = await tryAI(prompt);
+
+        if (!result || !result.output) {
+            result = ruleEngine(type, input);
+        }
+
+        res.json(result);
 
     } catch (error) {
-        console.error("Gemini Error:", error.message);
-        res.status(500).json({
-            error: "AI generation failed"
+
+        console.error(error);
+
+        res.json({
+            output: "System fallback response",
+            provider: "system-error",
+            model: "none"
         });
     }
 });
 
-// ================= EMAIL API =================
-
-
-// Email transporter
+// ===============================
+// EMAIL SYSTEM
+// ===============================
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -144,67 +337,36 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Verify SMTP connection on server start
-transporter.verify(function (error, success) {
-    if (error) {
-        console.log("SMTP Error:", error);
-    } else {
-        console.log("SMTP Server is ready to send emails");
-    }
-});
-
-// Email API
 app.post('/send-email', async (req, res) => {
 
     const { name, email, subject, message } = req.body;
 
     if (!name || !email || !subject || !message) {
-        return res.status(400).json({
-            error: "All fields required"
-        });
+        return res.status(400).json({ error: "All fields required" });
     }
 
     try {
 
-        const mailOptions = {
+        await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER,
             replyTo: email,
-            subject: subject,
-            text: `
-New Contact Message
-
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
-
-Message:
-${message}
-`
-        };
-
-        const info = await transporter.sendMail(mailOptions);
-
-        console.log("Email sent:", info.response);
-
-        res.json({
-            success: "Email sent successfully"
+            subject,
+            text: `${name}\n\n${message}`
         });
+
+        res.json({ success: true });
 
     } catch (error) {
-
-        console.log("Full Email Error:", error);
-
-        res.status(500).json({
-            error: "Email failed to send",
-            details: error.message
-        });
+        res.status(500).json({ error: "Email failed" });
     }
 });
 
-// Render Port
+// ===============================
+// START SERVER
+// ===============================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log("🔥 Hybrid AI System Running");
 });

@@ -333,6 +333,44 @@ p {
     transform: scale(1.05);
 }
 
+.affiliate-recommendation {
+    margin-top: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #111827, #1f2937);
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+}
+
+.affiliate-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.affiliate-btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.affiliate-btn.rytr {
+    background: #7c3aed;
+}
+
+.affiliate-btn.simplified {
+    background: #2563eb;
+}
+
+.affiliate-btn:hover {
+    transform: translateY(-3px);
+}
+
 .telegram-box {
     margin-top: 20px;
     text-align: center;

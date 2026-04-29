@@ -155,3 +155,57 @@ document.addEventListener("DOMContentLoaded", () => {
         navToggle.addEventListener("click", () => navLinks.classList.toggle("active"));
     }
 });
+
+// ========================================
+// Progressive Web App (PWA)
+// ========================================
+
+// Register Service Worker
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+        try {
+            const registration = await navigator.serviceWorker.register("/service-worker.js");
+            console.log("Service Worker registered:", registration.scope);
+        } catch (error) {
+            console.error("Service Worker registration failed:", error);
+        }
+    });
+}
+
+// Install Prompt
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.getElementById("installBtn");
+
+    if (installBtn) {
+        installBtn.style.display = "inline-block";
+
+        installBtn.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log("Installation result:", outcome);
+
+            deferredPrompt = null;
+            installBtn.style.display = "none";
+        });
+    }
+});
+
+// Hide button after successful installation
+window.addEventListener("appinstalled", () => {
+    console.log("PWA installed successfully.");
+
+    deferredPrompt = null;
+
+    const installBtn = document.getElementById("installBtn");
+    if (installBtn) {
+        installBtn.style.display = "none";
+    }
+});

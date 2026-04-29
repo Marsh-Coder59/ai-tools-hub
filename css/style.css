@@ -454,6 +454,23 @@ p {
     height: 28px;
 }
 
+.install-btn {
+    display: none;
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-left: 20px;
+}
+
+.install-btn:hover {
+    transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
     nav .nav-links {
         display: none;
